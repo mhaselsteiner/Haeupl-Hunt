@@ -2,8 +2,8 @@ import pygame
 import random
 import os
 
-WIDTH = 480
-HEIGHT = 480
+WIDTH = 1200
+HEIGHT = 724
 FPS = 30 #frames per second
 #define colors
 
@@ -33,6 +33,9 @@ gammelintro_sound_en = pygame.mixer.Sound(os.path.join(snd_dir, 'gammelenglisch.
 story_intro_de = pygame.mixer.Sound(os.path.join(snd_dir, 'intro_deutsch.wav'))
 gammelintro_sound_de = pygame.mixer.Sound(os.path.join(snd_dir, 'gammelintro.wav'))
 
+
+#loasd images
+bg=pygame.image.load(os.path.join(img_folder, "rathaus.png"))
 #drawing text in screen
 font_name = pygame.font.match_font('arial')
 def draw_text(surf,text,size, x ,y ):
@@ -271,6 +274,8 @@ class Spritzer(pygame.sprite.Sprite):
         if (self.rect.bottom < 0 or self.rect.top > HEIGHT or self.rect.left < 0 or self.rect.right > WIDTH):
             self.kill()
 
+
+
 def show_game_over_screen():
     draw_text(screen, "OIS AUS! OIS OASCH!!",40, WIDTH/2, HEIGHT/2)
     draw_text(screen,"Waunst no amoi spuen wuest, druck a Tastn", 20, WIDTH / 2, HEIGHT / 1.5)
@@ -364,6 +369,7 @@ hitsbuffer =  []
 while running:
     #keep loop running at the right speed
     clock.tick(FPS)
+    screen.blit(bg, (0, 0))
     if intro :
         show_start_screen(language)
         pygame.mixer.stop()
@@ -392,8 +398,9 @@ while running:
         knedl = Knedl()
         knedln.add(knedl)
         all_sprites.add(knedl)
+        screen.blit(bg, (0, 0))
 
-	#update
+    #update
     all_sprites.update()
     knedln.update()
 
@@ -435,7 +442,7 @@ while running:
             #all_sprites.add(speiben)
 
 	#draw
-    screen.fill(BLACK)
+    #screen.fill(BLACK)
     all_sprites.draw(screen)
     draw_text(screen, 'Score: ' + str(score), 18, WIDTH / 2, 10)
     draw_text(screen, 'Spritzer: ' + str(player.spritzer_count), 18, WIDTH / 2 + 90, 10)
