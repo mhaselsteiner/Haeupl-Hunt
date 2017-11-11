@@ -143,14 +143,14 @@ class Player(pygame.sprite.Sprite):
         self.spritzer_count += 1
         self.sober_up_time = 15 * 1e3 + pygame.time.get_ticks()
         if self.spritzer_count == 1:
-            self.speed += 0.5
+            self.speed += 1
             guadertropfen_sound.play()
 
         elif self.spritzer_count == 8:
-                self.speed += 0.5
+                self.speed += 1
                 gscheiderfetzn_sound.play()
         else:
-            self.speed += 0.5
+            self.speed += 1
 
     def puke(self):
         self.puking = True
@@ -190,7 +190,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.join(img_folder,"gammel.png" )).convert()
+        self.image = pygame.image.load(os.path.join(img_folder,"gammel2.png" )).convert()
         self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.rect.center = (100, 150)
@@ -355,12 +355,12 @@ knedln.add(knedl)
 all_sprites.add(knedl)
 
 
-
-
+maxwidthbar=100
+speibzahl=12.
 game_over = False
 running = True
 score = 0
-intro = True
+intro = False
 language = "de"
 hitsbuffer =  []
 #Game loop
@@ -435,8 +435,9 @@ while running:
     hits = pygame.sprite.spritecollide(player, wein, True)  # bool sets if sprite should be deleted
     if hits:
         player.getdrunk()
-        if player.spritzer_count == 10:
+        if player.spritzer_count == speibzahl:
             player.puke()
+            player.speed = 4
             score = score - 20 # knedl speiben
             #speiben = Speiben(player.rect.center)
             #all_sprites.add(speiben)
@@ -444,8 +445,11 @@ while running:
 	#draw
     #screen.fill(BLACK)
     all_sprites.draw(screen)
-    draw_text(screen, 'Score: ' + str(score), 18, WIDTH / 2, 10)
+    draw_text(screen, 'Knedl Score: ' + str(score), 18, WIDTH / 2 - 20, 10)
     draw_text(screen, 'Spritzer: ' + str(player.spritzer_count), 18, WIDTH / 2 + 90, 10)
+    progress = float(player.spritzer_count) /speibzahl
+    pygame.draw.rect(screen, GREEN, pygame.Rect(WIDTH / 2 + 135, 18, maxwidthbar * progress,10))
+    pygame.draw.rect(screen,BLACK, pygame.Rect(WIDTH / 2 + 135, 18, maxwidthbar, 10), 1)
     #after drwing flip display
     pygame.display.flip() # shows new screen graphics
 
