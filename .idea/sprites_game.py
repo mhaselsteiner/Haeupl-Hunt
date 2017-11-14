@@ -193,17 +193,17 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load(os.path.join(img_folder,"gammel2.png" )).convert()
         self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
-        self.rect.center = (100, 150)
-        self.radius = 70
-        #pygame.draw.circle(self.image, BLUE, self.rect.center, self.radius)
+        self.rect.center = (100, 400)
+        self.radius = 160
+        #pygame.draw.circle(self.image, BLUE, (400- self.radius, 400- self.radius), self.radius)
         self.y_speed = 2
 
     def update(self):
         self.rect.x += 5
         self.rect.y += self.y_speed
-        if self.rect.bottom > HEIGHT - 250:
+        if self.rect.bottom > HEIGHT - 10:
             self.y_speed = - self.y_speed
-        if self.rect.top < 250:
+        if self.rect.top < 20:
             self.y_speed = - self.y_speed
 
         if self.rect.left > WIDTH:
@@ -222,10 +222,10 @@ class Bullet(pygame.sprite.Sprite):
         self.image .set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.radius = self.rect.width / 2
-        self.rect.bottom = y
-        self.rect.centerx = x + 10
-        self.y_speed =  random.randint(4, 4)
-        self.x_speed =  4
+        self.rect.bottom = y + 30
+        self.rect.centerx = x + 30
+        self.y_speed =  random.randint(-8, 8)
+        self.x_speed = 10
     def update(self):
         self.rect.y +=self.y_speed
         self.rect.x += self.x_speed
@@ -388,7 +388,7 @@ while running:
             running =  False
 
 
-    if (random.randint(0,600) % 27) == 0:
+    if (random.randint(0,600) % 17) == 0:
         gammelgrammel.shoot()
     elif((random.randint(0, 600) / 11) == 0):
         spritzer = Spritzer()
@@ -410,6 +410,9 @@ while running:
         #running = False
         game_over  = True
     # check to see if grammel hit player
+    hits = pygame.sprite.spritecollide(gammelgrammel,knedln,True, pygame.sprite.collide_circle) #bool sets if sprite should be deleted
+    hits = pygame.sprite.spritecollide(gammelgrammel,wein,True, pygame.sprite.collide_circle) #bool sets if sprite should be deleted
+
 
     hits = pygame.sprite.spritecollide(player, bullets, False, pygame.sprite.collide_circle)
     if hits:
