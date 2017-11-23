@@ -5,8 +5,8 @@ import os
 WIDTH = 1200
 HEIGHT = 724
 FPS = 30 #frames per second
-#define colors
 
+#define colors
 WHITE =(255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
@@ -15,7 +15,6 @@ BLUE = (0, 0, 255)
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder,"img")
 snd_dir = os.path.join(game_folder,"sound")
-
 
 pygame.init()
 pygame.mixer.init() # initializes sound
@@ -36,18 +35,19 @@ gammelintro_sound_de = pygame.mixer.Sound(os.path.join(snd_dir, 'gammelintro.wav
 
 #loasd images
 bg=pygame.image.load(os.path.join(img_folder, "rathaus.png"))
+michi=pygame.image.load(os.path.join(img_folder, "michistart.png"))
 #drawing text in screen
 font_name = pygame.font.match_font('arial')
-def draw_text(surf,text,size, x ,y ):
+def draw_text(surf,text,size, x ,y, color=BLACK ):
     font = pygame.font.Font(font_name, size)
-    text_surface = font.render(text, True, WHITE) #True sets anti alias (blurs pixel at the edges of letters -> text looks smoother)
+    text_surface = font.render(text, True, color) #True sets anti alias (blurs pixel at the edges of letters -> text looks smoother)
     text_rect = text_surface.get_rect()
     text_rect.midtop =(x,y)
     surf.blit(text_surface, text_rect)
 
 
 class Player(pygame.sprite.Sprite):
-    speed = 4
+    speed = FPS / 7.5
     calm_down_time = 0
     sober_up_time = 0
     spritzer_count = 0
@@ -67,7 +67,7 @@ class Player(pygame.sprite.Sprite):
         self.y_speed = 0
         self.x_speed = 0
         self.last_update = 0
-        self.frame_rate_puke = 300  # speed of animation
+        self.frame_rate_puke = FPS/0.1  # speed of animation
         self.current_frame = 1
 
     def load_images(self):
@@ -123,7 +123,7 @@ class Player(pygame.sprite.Sprite):
         if pygame.time.get_ticks() > self.sober_up_time:
             self.drunk = False
             self.spritzer_count = 0
-            self.speed = 4
+            self.speed = FPS / 7.5
 
 
         self.rect.y += self.y_speed
@@ -143,14 +143,14 @@ class Player(pygame.sprite.Sprite):
         self.spritzer_count += 1
         self.sober_up_time = 15 * 1e3 + pygame.time.get_ticks()
         if self.spritzer_count == 1:
-            self.speed += 1
+            self.speed += FPS / 30.
             guadertropfen_sound.play()
 
         elif self.spritzer_count == 8:
-                self.speed += 1
+                self.speed +=  FPS / 30.
                 gscheiderfetzn_sound.play()
         else:
-            self.speed += 1
+            self.speed +=  FPS / 30.
 
     def puke(self):
         self.puking = True
@@ -158,8 +158,8 @@ class Player(pygame.sprite.Sprite):
         self.drunk = False
         pygame.time.delay(2000)
         self.spritzer_count = 0
-        if self.speed >= 2:
-            self.speed = self.speed - 2
+        if self.speed >=  FPS / 15.:
+            self.speed = self.speed -  FPS / 15.
         else:
             self.speed = 0
 
@@ -176,10 +176,10 @@ class Player(pygame.sprite.Sprite):
              #   saperlott_sound.play()
 
         self.shout = False
-        if self.speed >= 2:
-            self.speed = self.speed - 2
+        if self.speed >=  FPS / 15.:
+            self.speed = self.speed -  FPS / 15.
         else:
-            self.speed = 1
+            self.speed =  FPS / 30.
         pygame.time.delay(2000)
 
 
@@ -196,10 +196,11 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = (100, 400)
         self.radius = 160
         #pygame.draw.circle(self.image, BLUE, (400- self.radius, 400- self.radius), self.radius)
-        self.y_speed = 2
+        self.y_speed =  FPS / 15.
+        self.x_speed = FPS / 15.
 
     def update(self):
-        self.rect.x += 5
+        self.rect.x += self.x_speed
         self.rect.y += self.y_speed
         if self.rect.bottom > HEIGHT - 10:
             self.y_speed = - self.y_speed
@@ -224,8 +225,8 @@ class Bullet(pygame.sprite.Sprite):
         self.radius = self.rect.width / 2
         self.rect.bottom = y + 30
         self.rect.centerx = x + 30
-        self.y_speed =  random.randint(-8, 8)
-        self.x_speed = 10
+        self.y_speed =  random.randint(- FPS / 3.75,  FPS / 3.75)
+        self.x_speed =  FPS / 3.
     def update(self):
         self.rect.y +=self.y_speed
         self.rect.x += self.x_speed
@@ -277,8 +278,8 @@ class Spritzer(pygame.sprite.Sprite):
 
 
 def show_game_over_screen():
-    draw_text(screen, "OIS AUS! OIS OASCH!!",40, WIDTH/2, HEIGHT/2)
-    draw_text(screen,"Waunst no amoi spuen wuest, druck a Tastn", 20, WIDTH / 2, HEIGHT / 1.5)
+    draw_text(screen, "OIS AUS! OIS OASCH!!",40, WIDTH/2, HEIGHT/2, color=WHITE)
+    draw_text(screen,"Waunst no amoi spuen wuest, druck a Tastn", 20, WIDTH / 2, HEIGHT / 1.5, color=WHITE)
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -292,8 +293,10 @@ def show_game_over_screen():
 
 
 def show_start_screen(language):
-    draw_text(screen, "Willkommen in Wien!", 40, WIDTH / 2, HEIGHT / 2)
-    draw_text(screen, "To switch to english please press 'E'", 20, WIDTH / 2, HEIGHT / 1.5)
+    draw_text(screen, "Willkommen in Wien!", 40, WIDTH / 2, 100)
+    draw_text(screen, "Iss so viele Knedl wie du kannst, und lass dich nicht vom zornigen vergammelten", 30, WIDTH / 2, 200)
+    draw_text(screen, " Grammelknedl oder seiner grammeligen Munition erwischen!", 30, WIDTH / 2, 250)
+    screen.blit(michi, (200,1000))
     pygame.display.flip()
     waiting = True
     now=pygame.time.get_ticks()
@@ -315,7 +318,7 @@ def show_start_screen(language):
                     #chan1= \
                     story_intro_en.play()
                    # endint = chan1.get_endevent()
-            if pygame.time.get_ticks() > now + 100:
+            if pygame.time.get_ticks() > now + 9500:
                 waiting = False
 
             else:
@@ -329,16 +332,9 @@ def show_start_screen(language):
 
                 #if pygame.time.get_ticks() > now + 21000:
 
-
-
-
-
-
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Haeupl Hunt")
 clock = pygame.time.Clock()
-
-
 
 
 all_sprites = pygame.sprite.Group()
@@ -360,7 +356,7 @@ speibzahl=12.
 game_over = False
 running = True
 score = 0
-intro = False
+intro = True
 language = "de"
 hitsbuffer =  []
 #Game loop
@@ -369,16 +365,18 @@ hitsbuffer =  []
 while running:
     #keep loop running at the right speed
     clock.tick(FPS)
-    screen.blit(bg, (0, 0))
-    if intro :
+    screen.blit(bg, (0, 0)) #showbg image and place in center
+
+    while intro :
+        screen.blit(michi, (WIDTH/2, HEIGHT-250))
         show_start_screen(language)
         pygame.mixer.stop()
         if language == "de":
             gammelintro_sound_de.play()
         elif language=="en":
             gammelintro_sound_en.play()
-        pygame.time.wait(6000)
-    intro = False
+        #pygame.time.wait(30000)
+        intro = False
 
 
 	#process input
@@ -387,18 +385,23 @@ while running:
         if event.type == pygame.QUIT:
             running =  False
 
+#defines the appearence rates of spritzer, knedl, grammeln
 
-    if (random.randint(0,600) % 17) == 0:
+    if (random.randint(0,600) % 37) == 0:
         gammelgrammel.shoot()
-    elif((random.randint(0, 600) / 11) == 0):
+    if((random.randint(0, 600) % 67) == 0):
         spritzer = Spritzer()
         wein.add(spritzer)
         all_sprites.add(spritzer)
-    if (random.randint(0, 600) / 2) == 0:
+    if (random.randint(0, 600) % 17) == 0:
         knedl = Knedl()
         knedln.add(knedl)
         all_sprites.add(knedl)
-        screen.blit(bg, (0, 0))
+    if (pygame.time.get_ticks() % 100 == 0):
+        gammelgrammel.y_speed = gammelgrammel.y_speed + random.randint(-2,2)
+    if (pygame.time.get_ticks() %    3823 == 0):
+        gammelgrammel.y_speed = gammelgrammel.x_speed + 1
+
 
     #update
     all_sprites.update()
@@ -412,16 +415,12 @@ while running:
     # check to see if grammel hit player
     hits = pygame.sprite.spritecollide(gammelgrammel,knedln,True, pygame.sprite.collide_circle) #bool sets if sprite should be deleted
     hits = pygame.sprite.spritecollide(gammelgrammel,wein,True, pygame.sprite.collide_circle) #bool sets if sprite should be deleted
-
-
     hits = pygame.sprite.spritecollide(player, bullets, False, pygame.sprite.collide_circle)
     if hits:
         if not hitsbuffer:
             player.angry()
-
     if (pygame.time.get_ticks() >= player.calm_down_time) & (player.anger):  # has he clamed down?
         player.anger = False
-
     hitsbuffer = pygame.sprite.spritecollide(player, bullets, False, pygame.sprite.collide_circle)
 
         #running = False
@@ -440,16 +439,16 @@ while running:
         player.getdrunk()
         if player.spritzer_count == speibzahl:
             player.puke()
-            player.speed = 4
+            player.speed = FPS / 7.5
             score = score - 20 # knedl speiben
             #speiben = Speiben(player.rect.center)
             #all_sprites.add(speiben)
-
-	#draw
+    #draw everything
     #screen.fill(BLACK)
     all_sprites.draw(screen)
     draw_text(screen, 'Knedl Score: ' + str(score), 18, WIDTH / 2 - 20, 10)
     draw_text(screen, 'Spritzer: ' + str(player.spritzer_count), 18, WIDTH / 2 + 90, 10)
+    draw_text(screen, 'Speed: ' + str(player.speed), 18, WIDTH / 2 + 400, 10)
     progress = float(player.spritzer_count) /speibzahl
     pygame.draw.rect(screen, GREEN, pygame.Rect(WIDTH / 2 + 135, 18, maxwidthbar * progress,10))
     pygame.draw.rect(screen,BLACK, pygame.Rect(WIDTH / 2 + 135, 18, maxwidthbar, 10), 1)
@@ -475,4 +474,3 @@ while running:
         intro = False
         hitsbuffer = []
         game_over = False
-
