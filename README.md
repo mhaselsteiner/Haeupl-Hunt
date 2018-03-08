@@ -31,4 +31,4 @@ game including  all sounds and images created  by [haselsteiner](https://github.
 ### Acknowledgments
 Inspired by:
  * Michael Haeupel
- * Josef Kementmueller, Jr.
+ * Josef Kemetmueller, Jr.
