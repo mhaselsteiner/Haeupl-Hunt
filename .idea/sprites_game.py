@@ -24,7 +24,6 @@ random.seed()
 speiben_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'speiben.wav'))
 heast_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'heast.wav'))
 gscheiderfetzn_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'gscheiderfetzn.wav'))
-saperlott_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'saperlott.wav'))
 guadertropfen_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'guadertropfen.wav'))
 
 story_intro_en = pygame.mixer.Sound(os.path.join(snd_dir, 'intro_englisch.wav'))
