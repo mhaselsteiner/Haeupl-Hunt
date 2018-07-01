@@ -96,7 +96,6 @@ class Player(pygame.sprite.Sprite):
             now = pygame.time.get_ticks()
             if now - self.last_update > self.frame_rate_puke:
                 self.last_update = now
-                # pygame.time.wait(300)
 
                 if self.current_frame == len(self.michispeibt):
                     self.image = self.michihappy
@@ -175,10 +174,7 @@ class Player(pygame.sprite.Sprite):
         self.shout = True
         self.image = self.michiboes
         if self.shout:
-            # if random.randint(0, 3) == 2:
             heast_sound.play()
-            #else:
-        #   saperlott_sound.play()
 
         self.shout = False
         if self.speed >= FPS / 15.:
@@ -187,7 +183,6 @@ class Player(pygame.sprite.Sprite):
             self.speed = FPS / 30.
         pygame.time.delay(2000)
 
-        #self.rect = self.image.get_rect()
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -199,7 +194,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (100, 400)
         self.radius = 160
-        #pygame.draw.circle(self.image, BLUE, (400- self.radius, 400- self.radius), self.radius)
         self.y_speed = FPS / 15.
         self.x_speed = FPS / 15.
 
@@ -255,14 +249,11 @@ class Knedl(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = random.randint(10, HEIGHT - 20)
         self.rect.centerx = random.randint(10, WIDTH - 20)
-        #self.y_speed = random.randint(-6,6)
-        #self.x_speed = random.randint(-6,6)
+
+
     def update(self):
         self.rect.y = self.rect.y
         self.rect.x = self.rect.x
-        #self.rect.y += self.y_speed
-        #self.rect.x += self.x_speed
-        #self.y_speed = random.randint(-6, 6)
         if (self.rect.bottom < 0 or self.rect.top > HEIGHT
                 or self.rect.left < 0 or self.rect.right > WIDTH):
             self.kill()
@@ -324,7 +315,6 @@ def show_start_screen(language):
     pygame.display.flip()
     waiting = True
     now = pygame.time.get_ticks()
-    #    chan1 = pygame.mixer.Channel()
     while waiting:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -334,25 +324,19 @@ def show_start_screen(language):
                 pygame.mixer.stop()
                 waiting = False
 
-#            if event.type == endint:
-#               waiting == False
 
             if event.type == pygame.key.get_pressed()[pygame.K_e]:
                 language = "en"
                 if not pygame.mixer.get_busy():
                     #chan1= \
                     story_intro_en.play()
-                # endint = chan1.get_endevent()
             if pygame.time.get_ticks() > now + 9500:
                 waiting = False
 
             else:
                 if not pygame.mixer.get_busy():
-                    #chan1 = \
                     story_intro_de.play()
-                    #endint = chan1.get_endevent()
 
-                #if pygame.time.get_ticks() > now + 21000:
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Haeupl Hunt")
@@ -379,7 +363,7 @@ score = 0
 intro = True
 language = "de"
 hitsbuffer = []
-#Game loop
+
 
 while running:
     #keep loop running at the right speed
@@ -394,7 +378,6 @@ while running:
             gammelintro_sound_de.play()
         elif language == "en":
             gammelintro_sound_en.play()
-        #pygame.time.wait(30000)
         intro = False
 
 #process input
@@ -429,7 +412,6 @@ while running:
         player, enemies, False,
         pygame.sprite.collide_circle)  #bool sets if sprite should be deleted
     if hits:
-        #running = False
         game_over = True
     # check to see if grammel hit player
     hits = pygame.sprite.spritecollide(
@@ -467,10 +449,7 @@ while running:
             player.puke()
             player.speed = FPS / 7.5
             score = score - 20  # knedl speiben
-            #speiben = Speiben(player.rect.center)
-            #all_sprites.add(speiben)
-        #draw everything
-        #screen.fill(BLACK)
+
     all_sprites.draw(screen)
     draw_text(screen, 'Knedl Score: ' + str(score), 18, WIDTH / 2 - 20, 10)
     draw_text(screen, 'Spritzer: ' + str(player.spritzer_count), 18,
@@ -482,7 +461,7 @@ while running:
                                  10))
     pygame.draw.rect(screen, BLACK,
                      pygame.Rect(WIDTH / 2 + 135, 18, maxwidthbar, 10), 1)
-    #after drwing flip display
+    #after drawing flip display
     pygame.display.flip()  # shows new screen graphics
 
     if game_over:
