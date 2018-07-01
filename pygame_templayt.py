@@ -2,13 +2,13 @@ import pygame
 import random
 
 pygame.init()
-pygame.mixer.init() # initializes sound
+pygame.mixer.init()  # initializes sound
 WIDTH = 360
 HEIGHT = 480
-FPS = 30 #frames per second
+FPS = 30  #frames per second
 #define colors
 
-WHITE =(255, 255, 255)
+WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
@@ -22,15 +22,15 @@ running = True
 while running:
     #keep loop running at the right speed
     clock.tick(FPS)
-	#process input
+    #process input
     for event in pygame.event.get():
-            #check for closing the window
-                if event.type ==pygame.QUIT:
-                    running =  False
-	#update
+        #check for closing the window
+        if event.type == pygame.QUIT:
+            running = False
+#update
     all_sprites.update()
-	#draw
+    #draw
     all_sprites.draw(screen)
     screen.fill(BLACK)
     #after drwing flip display
-    pygame.display.flip() # shows new screen graphics
+    pygame.display.flip()  # shows new screen graphics
