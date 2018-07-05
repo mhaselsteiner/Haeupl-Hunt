@@ -20,6 +20,8 @@ pygame.init()
 pygame.mixer.init()  # initializes sound
 random.seed()
 # init osund: sound can be converted from mp4 via command line :avconv -i sound.mp4 -vn -f wav sound.wav
+german_channel = pygame.mixer.Channel(1)
+english_channel = pygame.mixer.Channel(2)
 
 speiben_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'speiben.wav'))
 heast_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'heast.wav'))
@@ -184,7 +186,6 @@ class Player(pygame.sprite.Sprite):
         pygame.time.delay(2000)
 
 
-
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -250,7 +251,6 @@ class Knedl(pygame.sprite.Sprite):
         self.rect.bottom = random.randint(10, HEIGHT - 20)
         self.rect.centerx = random.randint(10, WIDTH - 20)
 
-
     def update(self):
         self.rect.y = self.rect.y
         self.rect.x = self.rect.x
@@ -303,6 +303,8 @@ def show_game_over_screen():
 
 
 def show_start_screen(language):
+    draw_text(screen, " For English Intro Press 'e', to skip 's' ", 20,
+              WIDTH / 2, 50)
     draw_text(screen, "Willkommen in Wien!", 40, WIDTH / 2, 100)
     draw_text(
         screen,
@@ -311,31 +313,27 @@ def show_start_screen(language):
     draw_text(screen,
               " Grammelknedl oder seiner grammeligen Munition erwischen!", 30,
               WIDTH / 2, 250)
+
     screen.blit(michi, (200, 1000))
     pygame.display.flip()
     waiting = True
     now = pygame.time.get_ticks()
-    while waiting:
+    if language == 'de':
+        german_channel.play(story_intro_de)
+    else:
+        english_channel.play(story_intro_en)
+    while pygame.mixer.get_busy():
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.key.get_pressed()[pygame.K_s]:
-                pygame.mixer.stop()
-                waiting = False
-
-
-            if event.type == pygame.key.get_pressed()[pygame.K_e]:
-                language = "en"
-                if not pygame.mixer.get_busy():
-                    #chan1= \
-                    story_intro_en.play()
-            if pygame.time.get_ticks() > now + 9500:
-                waiting = False
-
-            else:
-                if not pygame.mixer.get_busy():
-                    story_intro_de.play()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    pygame.mixer.stop()
+                if event.key == pygame.K_e:
+                    language = "en"
+                    german_channel.stop()
+                    english_channel.play(story_intro_en)
 
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -363,7 +361,6 @@ score = 0
 intro = True
 language = "de"
 hitsbuffer = []
-
 
 while running:
     #keep loop running at the right speed
