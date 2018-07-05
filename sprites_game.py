@@ -281,16 +281,29 @@ class Spritzer(pygame.sprite.Sprite):
             self.kill()
 
 
-def show_game_over_screen():
-    draw_text(
-        screen, "OIS AUS! OIS OASCH!!", 40, WIDTH / 2, HEIGHT / 2, color=WHITE)
-    draw_text(
-        screen,
-        "Waunst no amoi spuen wuest, druck a Tastn",
-        20,
-        WIDTH / 2,
-        HEIGHT / 1.5,
-        color=WHITE)
+def show_game_over_screen(language='de'):
+    pygame.mixer.stop()
+    if language == 'de':
+        draw_text(
+            screen, "OIS AUS! OIS OASCH!!", 80, WIDTH / 2, HEIGHT / 2, color=WHITE)
+        draw_text(
+            screen,
+            "Waunst no amoi spuen wuest, druck a Tastn",
+            40,
+            WIDTH / 2,
+            HEIGHT / 1.5,
+            color=WHITE)
+    else:
+        draw_text(
+            screen, "GAME OVER, OIDE!!", 80, WIDTH / 2, HEIGHT / 2, color=WHITE)
+        draw_text(
+            screen,
+            "Press key to play again",
+            40,
+            WIDTH / 2,
+            HEIGHT / 1.5,
+            color=WHITE)
+
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -334,6 +347,7 @@ def show_start_screen(language):
                     language = "en"
                     german_channel.stop()
                     english_channel.play(story_intro_en)
+    return language
 
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -369,12 +383,12 @@ while running:
 
     while intro:
         screen.blit(michi, (WIDTH / 2, HEIGHT - 250))
-        show_start_screen(language)
+        language = show_start_screen(language)
         pygame.mixer.stop()
         if language == "de":
-            gammelintro_sound_de.play()
+            english_channel.play(gammelintro_sound_de)
         elif language == "en":
-            gammelintro_sound_en.play()
+            german_channel.play(gammelintro_sound_en)
         intro = False
 
 #process input
@@ -462,7 +476,7 @@ while running:
     pygame.display.flip()  # shows new screen graphics
 
     if game_over:
-        show_game_over_screen()
+        show_game_over_screen(language)
         all_sprites = pygame.sprite.Group()
         enemies = pygame.sprite.Group()
         bullets = pygame.sprite.Group()
